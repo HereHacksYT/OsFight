@@ -123,7 +123,7 @@
         const startBtn = document.getElementById('startBtn');
         const clearBtn = document.getElementById('clearHistoryBtn');
 
-        // Eğer daha önce isim kaydedilmişse inputa yaz
+        // Daha önce kaydedilmiş isim varsa inputa yaz
         const savedName = localStorage.getItem('playerName');
         if (savedName) {
             nameInput.value = savedName;
@@ -136,6 +136,7 @@
                 return;
             }
             localStorage.setItem('playerName', name);
+            // game.html aynı klasörde (public/) olduğu için doğrudan yönlendir
             window.location.href = 'game.html';
         });
 
