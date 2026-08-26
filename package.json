@@ -1,6 +1,8 @@
 {
-  "name": "osfight",
+  "name": "osfight-online",
   "version": "1.0.0",
+  "description": "OsFight - Online 3D Multiplayer Oyun",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
