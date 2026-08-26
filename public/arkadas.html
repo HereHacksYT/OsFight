@@ -2,14 +2,14 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OsFight - Arkadaşlar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="arkadasEkrani">
         <h2>👥 Arkadaş Yönetimi</h2>
-        <button onclick="window.location.href='game.html'">🔙 Oyun'a Dön</button>
+        <button onclick="window.location.href='index.html'">🔙 Oyun'a Dön</button>
 
         <div class="panel">
             <h3>➕ İstek At</h3>
@@ -30,11 +30,10 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        // Arkadaş sayfası script'i aynen önceki gibi
         const socket = io();
         let myUsername = localStorage.getItem('osfight_isim');
-        if (!myUsername) {
-            window.location.href = 'index.html';
-        }
+        if (!myUsername) window.location.href = 'index.html';
 
         socket.emit('login', myUsername);
 
@@ -43,25 +42,11 @@
             guncelleIstekListesi(data.friendRequests);
         });
 
-        socket.on('friends_updated', (friends) => {
-            guncelleArkadasListesi(friends);
-        });
-
-        socket.on('friend_requests_list', (requests) => {
-            guncelleIstekListesi(requests);
-        });
-
-        socket.on('new_friend_request', (from) => {
-            socket.emit('get_friend_requests');
-        });
-
-        socket.on('friend_request_sent', (to) => {
-            alert(`${to} adlı kullanıcıya istek gönderildi.`);
-        });
-
-        socket.on('friend_request_error', (msg) => {
-            alert(msg);
-        });
+        socket.on('friends_updated', (friends) => guncelleArkadasListesi(friends));
+        socket.on('friend_requests_list', (requests) => guncelleIstekListesi(requests));
+        socket.on('new_friend_request', () => socket.emit('get_friend_requests'));
+        socket.on('friend_request_sent', (to) => alert(`${to} adlı kullanıcıya istek gönderildi.`));
+        socket.on('friend_request_error', (msg) => alert(msg));
 
         function guncelleArkadasListesi(friends) {
             const ul = document.getElementById('arkadasListesi');
@@ -76,9 +61,7 @@
         function guncelleIstekListesi(requests) {
             const ul = document.getElementById('istekListesi');
             ul.innerHTML = '';
-            if (requests.length === 0) {
-                ul.innerHTML = '<li>Gelen istek yok</li>';
-            }
+            if (requests.length === 0) ul.innerHTML = '<li>Gelen istek yok</li>';
             requests.forEach(r => {
                 const li = document.createElement('li');
                 li.innerHTML = `${r} <button onclick="kabulEt('${r}')">Kabul Et</button> <button onclick="reddet('${r}')">Reddet</button>`;
@@ -88,19 +71,11 @@
 
         function istekGonder() {
             const target = document.getElementById('istekInput').value.trim();
-            if (target) {
-                socket.emit('send_friend_request', target);
-                document.getElementById('istekInput').value = '';
-            }
+            if (target) { socket.emit('send_friend_request', target); document.getElementById('istekInput').value = ''; }
         }
 
-        function kabulEt(requester) {
-            socket.emit('accept_friend_request', requester);
-        }
-
-        function reddet(requester) {
-            socket.emit('reject_friend_request', requester);
-        }
+        function kabulEt(requester) { socket.emit('accept_friend_request', requester); }
+        function reddet(requester) { socket.emit('reject_friend_request', requester); }
     </script>
 </body>
 </html>
