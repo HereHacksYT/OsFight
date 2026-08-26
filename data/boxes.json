@@ -1,0 +1,9 @@
+[
+  {
+    "id": "box1",
+    "hp": 100,
+    "maxHp": 100,
+    "position": { "x": 5, "y": 0.5, "z": 0 },
+    "energyAvailable": false
+  }
+]
