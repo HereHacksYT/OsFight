@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>OsFight - Oyun</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Üst bar -->
+    <div id="ustBar">
+        <span id="oyuncuAdi">⚔️ </span>
+        <span id="onlineSayisi">Online: 0</span>
+        <span id="gucGosterge">⚡ Güç: 0</span>
+    </div>
+
+    <!-- Uyarı -->
+    <div id="sagUstUyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</div>
+
+    <!-- 3D canvas -->
+    <div id="canvasContainer"></div>
+
+    <!-- Alt orta butonlar (masaüstü) -->
+    <div id="altButonlar">
+        <button onclick="arkadasSayfasi()">👥 Arkadaşlar</button>
+        <button onclick="basla()">🚀 Başla</button>
+    </div>
+
+    <!-- Mobil kontroller -->
+    <div id="mobilKontroller">
+        <div id="yonButonlari">
+            <button class="yon" data-yon="w">▲</button>
+            <button class="yon" data-yon="a">◀</button>
+            <button class="yon" data-yon="s">▼</button>
+            <button class="yon" data-yon="d">▶</button>
+        </div>
+        <button id="saldiriButonu">⚔️ Saldır</button>
+    </div>
+
+    <!-- Sağ panel (sohbet) -->
+    <div id="sagPanel">
+        <div id="sohbetKutusu">
+            <h3>💬 Sohbet</h3>
+            <div id="mesajlar"></div>
+            <input type="text" id="mesajInput" placeholder="Arkadaş seç...">
+            <button onclick="mesajGonder()">Gönder</button>
+        </div>
+        <div id="arkadasMiniListe">
+            <h4>Arkadaşlar</h4>
+            <ul id="arkadasUl"></ul>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="game.js"></script>
+</body>
+</html>
