@@ -1,149 +1,70 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OsFight - Giriş</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: #0d0d1a;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-    }
-    .container {
-      background: #1a1a2e;
-      padding: 40px 50px;
-      border-radius: 24px;
-      border: 2px solid #e94560;
-      box-shadow: 0 0 40px rgba(233,69,96,0.3);
-      text-align: center;
-      max-width: 450px;
-      width: 90%;
-    }
-    h1 {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      color: #e94560;
-      text-shadow: 0 0 20px #e94560aa;
-      margin-bottom: 10px;
-    }
-    .sub {
-      color: #aaa;
-      margin-bottom: 30px;
-      font-size: 14px;
-      border-bottom: 1px solid #333;
-      padding-bottom: 15px;
-    }
-    input {
-      width: 100%;
-      padding: 14px 18px;
-      font-size: 18px;
-      border: 2px solid #333;
-      border-radius: 12px;
-      background: #0d0d1a;
-      color: #fff;
-      outline: none;
-      transition: 0.3s;
-    }
-    input:focus {
-      border-color: #e94560;
-      box-shadow: 0 0 15px #e9456055;
-    }
-    .btn {
-      width: 100%;
-      padding: 14px;
-      margin-top: 18px;
-      font-size: 20px;
-      font-weight: bold;
-      background: #e94560;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.3s;
-      letter-spacing: 2px;
-    }
-    .btn:hover {
-      background: #ff6b81;
-      transform: scale(1.02);
-      box-shadow: 0 0 30px #e94560aa;
-    }
-    .warning {
-      margin-top: 20px;
-      color: #f5c842;
-      font-size: 13px;
-      background: #1a1a2e;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px dashed #f5c842;
-      letter-spacing: 0.5px;
-    }
-    .clear-btn {
-      margin-top: 15px;
-      background: transparent;
-      border: 1px solid #666;
-      color: #999;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: 0.3s;
-    }
-    .clear-btn:hover {
-      border-color: #e94560;
-      color: #e94560;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OsFight Online</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>⚡ OsFight</h1>
-    <div class="sub">🔰 Savaşa Hazır Ol</div>
 
-    <input type="text" id="playerName" placeholder="Savaşçı Adını Gir..." autofocus />
-    <button class="btn" id="startBtn">🔰 SAVAŞA GİR</button>
+    <!-- GİRİŞ EKRANI -->
+    <div id="girisEkrani">
+        <div class="giris-kutusu">
+            <h1>⚔️ OsFight Online ⚔️</h1>
+            <p>İsmini yaz ve dünyaya katıl:</p>
+            <input type="text" id="isimInput" placeholder="Kullanıcı adı..." maxlength="15">
+            <button onclick="girisYap()">Katıl</button>
+            <p class="uyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</p>
+        </div>
+    </div>
 
-    <div class="warning">💾 Geçmişi Silersen Arkadaş ve İsmin Gider! 💾</div>
+    <!-- OYUN EKRANI -->
+    <div id="oyunEkrani" style="display: none;">
+        <!-- Üst bar -->
+        <div id="ustBar">
+            <span id="oyuncuAdi"></span>
+            <span id="onlineSayisi">Online: 0</span>
+        </div>
 
-    <button class="clear-btn" id="clearHistoryBtn">🗑️ Geçmişi Temizle</button>
-  </div>
+        <!-- Sağ üst uyarı -->
+        <div id="sagUstUyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</div>
 
-  <script>
-    const nameInput = document.getElementById('playerName');
-    const startBtn = document.getElementById('startBtn');
-    const clearBtn = document.getElementById('clearHistoryBtn');
+        <!-- 3D canvas -->
+        <div id="canvasContainer"></div>
 
-    const savedName = localStorage.getItem('playerName');
-    if (savedName) nameInput.value = savedName;
+        <!-- Alt orta butonlar -->
+        <div id="altButonlar">
+            <button onclick="karakterSec()">🎭 Karakter Seç</button>
+            <button onclick="basla()">🚀 Başla</button>
+        </div>
 
-    startBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      if (name === '') {
-        alert('Lütfen bir savaşçı adı girin!');
-        return;
-      }
-      localStorage.setItem('playerName', name);
-      window.location.href = 'game.html';
-    });
+        <!-- Sağ panel: arkadaş ve sohbet -->
+        <div id="sagPanel">
+            <div id="arkadasListesi">
+                <h3>👥 Arkadaşlar</h3>
+                <ul id="arkadasUl"></ul>
+                <button onclick="arkadasEkle()">➕ Arkadaş Ekle</button>
+            </div>
+            <div id="sohbetKutusu">
+                <h3>💬 Sohbet</h3>
+                <div id="mesajlar"></div>
+                <input type="text" id="mesajInput" placeholder="Mesaj yaz...">
+                <button onclick="mesajGonder()">Gönder</button>
+            </div>
+        </div>
+    </div>
 
-    nameInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') startBtn.click();
-    });
-
-    clearBtn.addEventListener('click', () => {
-      if (confirm('Geçmişi silersen ismin ve tüm arkadaşların gider. Devam et?')) {
-        localStorage.removeItem('playerName');
-        localStorage.removeItem('friends');
-        nameInput.value = '';
-        alert('✅ Geçmiş temizlendi!');
-      }
-    });
-  </script>
+    <!-- Socket.io client -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Three.js CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
