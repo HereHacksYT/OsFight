@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>OsFight - Giriş</title>
+    <hmeta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,2 maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>OsFight>
+ Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+           <body>
+
+    <!-- DİKEY MOD UYARISI -->
+    <div id="dikeyUyari">
+        <div class <="dikey-icerik">
+            <h2>📱 Cihazını Yatay Çevir</p>OsFight sadece yatay modda oynanabilir.</p>
+        </div>
+    </div>
+
+    <!-- GİRİŞ EKRANI -->
     <div id="girisEkrani">
         <div class="giris-kutusu">
             <h1>⚔️ OsFight Online ⚔️</h1>
@@ -17,20 +27,60 @@
         </div>
     </div>
 
+    <!-- OYUN EKRANI -->
+    <div id="oyunEkrani" style="display: none;">
+        <!-- Üst bar -->
+        <div id="ustBar">
+            <span id="oyuncuAdi">⚔️ </span>
+            <span id="onlineSayisi">Online: 0</span>
+            <span id="gucGosterge">⚡ Güç: 0</span>
+        </div>
+
+        <!-- Sağ üst uyarı -->
+        <div id="sagUstUyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</div>
+
+        <!-- 3D canvas -->
+        <div id="canvasContainer"></div>
+
+        <!-- BAŞLAT butonu -->
+        <button id="baslatButonu" onclick="oyunuBaslat()">🚀 BAŞLAT</button>
+
+        <!-- Alt orta butonlar -->
+        <div id="altButonlar" style="display: none;">
+            <button onclick="arkadasSayfasi()">👥 Arkadaşlar</button>
+        </div>
+
+        <!-- Joystick (sanal) -->
+        <div id="joystickAlani">
+            <div id="joystickKol"></div>
+        </div>
+
+        <!-- Saldırı butonu (mobil) -->
+        <button id="saldiriButonu">⚔️</button>
+
+        <!-- Sağ panel (sohbet) -->
+        <div id="sagPanel">
+            <div id="sohbetKutusu">
+                <h3>💬 Sohbet</h3>
+                <div id="mesajlar"></div>
+                <input type="text" id="mesajInput" placeholder="Arkadaş seç...">
+                <button onclick="mesajGonder()">Gönder</button>
+            </div>
+            <div id="arkadasMiniListe">
+                <h4>Arkadaşlar</h4>
+                <ul id="arkadasUl"></ul>
+            </div>
+        </div>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-
-        function girisYap() {
-            const username = document.getElementById('isimInput').value.trim();
-            if (!username) return alert('İsim girmelisin!');
-            localStorage.setItem('osfight_isim', username);
-            socket.emit('login', username);
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
         }
-
-        socket.on('login_success', (data) => {
-            window.location.href = 'game.html';
-        });
     </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
