@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>OsFight</title>
+  <style>
+    /* Basit stil */
+    body { margin:0; font-family: Arial; background:#1a1a2e; color:white; display:flex; justify-content:center; align-items:center; height:100vh; flex-direction:column; }
+    #nameScreen { text-align:center; }
+    input { padding:10px; font-size:18px; border-radius:8px; border:none; }
+    button { padding:10px 20px; font-size:18px; margin-top:10px; cursor:pointer; }
+    .warning { color: #ffcc00; margin-top:10px; font-size:14px; }
+  </style>
+</head>
+<body>
+  <div id="nameScreen">
+    <h1>OsFight'a Hoş Geldin</h1>
+    <input type="text" id="playerName" placeholder="İsmini gir..." />
+    <br>
+    <button id="startBtn">Giriş Yap</button>
+    <div class="warning">💾 Geçmişi Silersen Arkadaş ve İsmin Gider! 💾</div>
+  </div>
+
+  <script>
+    document.getElementById('startBtn').addEventListener('click', () => {
+      const name = document.getElementById('playerName').value.trim();
+      if (name === '') {
+        alert('Lütfen bir isim girin.');
+        return;
+      }
+      localStorage.setItem('playerName', name);
+      // 3D sahneye geç
+      window.location.href = 'game.html'; // veya aynı sayfada sahneyi göster
+    });
+  </script>
+</body>
+</html>
