@@ -1,8 +1,6 @@
 {
   "name": "osfight-server",
   "version": "1.0.0",
-  "description": "OsFight Multiplayer Sunucusu",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
