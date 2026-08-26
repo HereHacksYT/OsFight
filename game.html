@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OsFight - Savaş</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            background: #0d0d1a;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: #fff;
+        }
+        /* Sağ üst uyarı */
+        #warningTopRight {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #f5c842;
+            color: #f5c842;
+            font-size: 13px;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            user-select: none;
+        }
+        /* Alt panel (karakter + başla) */
+        #bottomPanel {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 16px 24px;
+            border-radius: 60px;
+            backdrop-filter: blur(8px);
+            border: 1px solid #333;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #bottomPanel button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+        .char-btn {
+            background: #2a2a4a;
+            color: #fff;
+            border: 2px solid transparent !important;
+        }
+        .char-btn:hover {
+            transform: scale(1.08);
+            border-color: #fff !important;
+        }
+        #startGame {
+            background: #e94560;
+            color: #fff;
+            padding: 10px 34px;
+        }
+        #startGame:hover {
+            background: #ff6b81;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #e94560aa;
+        }
+
+        /* Sağ panel (arkadaş işlemleri) */
+        #rightPanel {
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            z-index: 10;
+        }
+        #rightPanel button {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            min-width: 140px;
+            text-align: center;
+        }
+        #rightPanel button:hover {
+            background: #e94560;
+            border-color: #e94560;
+            transform: scale(1.05);
+        }
+
+        /* Sohbet Kutusu (arkadaş ile konuş) */
+        #chatBox {
+            display: none;
+            position: absolute;
+            bottom: 120px;
+            right: 30px;
+            width: 280px;
+            max-height: 340px;
+            background: #1a1a2e;
+            border: 1px solid #555;
+            border-radius: 16px;
+            padding: 16px;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            flex-direction: column;
+        }
+        #chatBox .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #e94560;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+        #chatBox .header span {
+            cursor: pointer;
+            color: #aaa;
+        }
+        #chatBox .header span:hover {
+            color: #fff;
+        }
+        #messages {
+            flex: 1;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #ddd;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        #messages p {
+            background: #0d0d1a;
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin: 0;
+            word-break: break-word;
+        }
+        #chatInput {
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #444;
+            background: #0d0d1a;
+            color: #fff;
+            outline: none;
+            margin-bottom: 8px;
+        }
+        #sendMsg {
+            background: #e94560;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #sendMsg:hover {
+            background: #ff6b81;
+        }
+
+        /* Three.js canvas'ı otomatik doldurur */
+        canvas {
+            display: block;
+        }
+
+        /* Mobil uyum */
+        @media (max-width: 700px) {
+            #bottomPanel {
+                bottom: 15px;
+                padding: 12px;
+                gap: 8px;
+                border-radius: 30px;
+                width: 95%;
+            }
+            #bottomPanel button {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+            #rightPanel {
+                right: 10px;
+                gap: 8px;
+            }
+            #rightPanel button {
+                padding: 8px 12px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+            #warningTopRight {
+                font-size: 10px;
+                padding: 6px 10px;
+                top: 10px;
+                right: 10px;
+            }
+            #chatBox {
+                width: 220px;
+                right: 10px;
+                bottom: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sağ üst uyarı -->
+    <div id="warningTopRight">💾 Geçmişi Silersen Arkadaş ve İsmin Gider! 💾</div>
+
+    <!-- Alt Panel -->
+    <div id="bottomPanel">
+        <button class="char-btn" id="char1" style="background:#e94560;">⚔️ Kılıç</button>
+        <button class="char-btn" id="char2" style="background:#1e90ff;">🏹 Okçu</button>
+        <button class="char-btn" id="char3" style="background:#32cd32;">🧙 Büyücü</button>
+        <button id="startGame">🔥 BAŞLA</button>
+    </div>
+
+    <!-- Sağ Panel -->
+    <div id="rightPanel">
+        <button id="addFriend">👥 Arkadaş Ekle</button>
+        <button id="chatFriend">💬 Arkadaş ile Konuş</button>
+    </div>
+
+    <!-- Sohbet Kutusu -->
+    <div id="chatBox">
+        <div class="header">
+            <span>💬 Sohbet</span>
+            <span id="closeChat" style="cursor:pointer;">✕</span>
+        </div>
+        <div id="messages"></div>
+        <input type="text" id="chatInput" placeholder="Mesajını yaz..." />
+        <button id="sendMsg">Gönder</button>
+    </div>
+
+    <!-- Three.js Kütüphanesi -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ---- THREE.JS SAHNE ----
+        import * as THREE from 'three';
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0d0d1a);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(4, 3, 6);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.prepend(renderer.domElement);
+
+        // Işıklar
+        const ambient = new THREE.AmbientLight(0x404060);
+        scene.add(ambient);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(5, 10, 7);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        const fillLight = new THREE.DirectionalLight(0xffaa88, 0.4);
+        fillLight.position.set(-3, 2, 4);
+        scene.add(fillLight);
+
+        // Zemin
+        const groundGeo = new THREE.PlaneGeometry(12, 12);
+        const groundMat = new THREE.MeshStandardMaterial({
+            color: 0x1a1a2e,
+            roughness: 0.7,
+            metalness: 0.1,
+            side: THREE.DoubleSide
+        });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -0.01;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Izgara (dekor)
+        const gridHelper = new THREE.GridHelper(10, 20, 0xe94560, 0x333366);
+        gridHelper.position.y = 0;
+        scene.add(gridHelper);
+
+        // Oyuncu (karakter küpü)
+        const player = new THREE.Mesh(
+            new THREE.BoxGeometry(0.8, 0.8, 0.8),
+            new THREE.MeshStandardMaterial({ color: 0xe94560, emissive: 0x330000, roughness: 0.3, metalness: 0.6 })
+        );
+        player.position.set(0, 0.4, 0);
+        player.castShadow = true;
+        scene.add(player);
+
+        // Oyuncu altındaki ışıltı
+        const glow = new THREE.Mesh(
+            new THREE.CircleGeometry(0.5, 16),
+            new THREE.MeshBasicMaterial({ color: 0xe94560, transparent: true, opacity: 0.2 })
+        );
+        glow.rotation.x = -Math.PI / 2;
+        glow.position.set(0, 0.01, 0);
+        scene.add(glow);
+
+        // Kamera animasyonu (hafif sallanma)
+        let time = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            const bob = Math.sin(time * 0.5) * 0.05;
+            player.position.y = 0.4 + bob;
+            glow.position.y = 0.01 + bob * 0.2;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Pencere yeniden boyutlandırma
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ---- UI İŞLEMLERİ ----
+
+        // Kayıtlı isim
+        const playerName = localStorage.getItem('playerName') || 'Savaşçı';
+        console.log(`⚔️ ${playerName} savaşa katıldı!`);
+
+        // Karakter seç (renk değiştir)
+        document.getElementById('char1').addEventListener('click', () => {
+            player.material.color.setHex(0xe94560);
+            player.material.emissive.setHex(0x330000);
+        });
+        document.getElementById('char2').addEventListener('click', () => {
+            player.material.color.setHex(0x1e90ff);
+            player.material.emissive.setHex(0x002244);
+        });
+        document.getElementById('char3').addEventListener('click', () => {
+            player.material.color.setHex(0x32cd32);
+            player.material.emissive.setHex(0x003300);
+        });
+
+        // Başla butonu
+        document.getElementById('startGame').addEventListener('click', () => {
+            alert(`⚔️ ${playerName}, savaş başladı! (Oyun mantığını buraya ekleyin)`);
+        });
+
+        // Arkadaş Ekle
+        document.getElementById('addFriend').addEventListener('click', () => {
+            const friend = prompt('Arkadaşının adını yaz:');
+            if (friend && friend.trim() !== '') {
+                let friends = JSON.parse(localStorage.getItem('friends') || '[]');
+                if (!friends.includes(friend.trim())) {
+                    friends.push(friend.trim());
+                    localStorage.setItem('friends', JSON.stringify(friends));
+                    alert(`✅ ${friend.trim()} arkadaş olarak eklendi!`);
+                } else {
+                    alert('⚠️ Bu arkadaş zaten listede.');
+                }
+            }
+        });
+
+        // Sohbet kutusunu aç/kapat
+        const chatBox = document.getElementById('chatBox');
+        document.getElementById('chatFriend').addEventListener('click', () => {
+            if (chatBox.style.display === 'flex') {
+                chatBox.style.display = 'none';
+            } else {
+                chatBox.style.display = 'flex';
+                document.getElementById('chatInput').focus();
+            }
+        });
+        document.getElementById('closeChat').addEventListener('click', () => {
+            chatBox.style.display = 'none';
+        });
+
+        // Sohbet mesajı gönder
+        const messagesDiv = document.getElementById('messages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendMsg');
+
+        function sendMessage() {
+            const msg = chatInput.value.trim();
+            if (msg === '') return;
+            const p = document.createElement('p');
+            p.innerHTML = `<strong>${playerName}</strong>: ${msg}`;
+            messagesDiv.appendChild(p);
+            chatInput.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            // Otomatik cevap (arkadaş taklidi)
+            setTimeout(() => {
+                const reply = document.createElement('p');
+                reply.innerHTML = `<em style="color:#aaa;">Arkadaş</em>: 👍 ${msg.length > 10 ? 'Anladım!' : 'Tamam!'}`;
+                messagesDiv.appendChild(reply);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 600);
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // ---- EKSTRA: Sağ üstteki uyarıya tıklayınca geçmişi silme (kolaylık) ----
+        document.getElementById('warningTopRight').addEventListener('dblclick', () => {
+            if (confirm('💣 Geçmişi sil (isim ve arkadaşlar)?')) {
+                localStorage.removeItem('playerName');
+                localStorage.removeItem('friends');
+                alert('🗑️ Geçmiş temizlendi! Sayfa yenilenecek.');
+                location.reload();
+            }
+        });
+
+        console.log('👥 Arkadaş Listesi:', JSON.parse(localStorage.getItem('friends') || '[]'));
+    </script>
+</body>
+</html>
