@@ -1,13 +1,27 @@
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
 
-app.use(express.static('public'));
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`OsFight sunucusu ${port} portunda çalışıyor!`);
+io.on('connection', (socket) => {
+  console.log('✅ Yeni oyuncu:', socket.id);
+  socket.on('player-join', (name) => console.log(`${name} katıldı`));
+  socket.on('chat-message', (data) => io.emit('chat-message', data));
+  socket.on('battle-action', (action) => io.emit('battle-action', action));
+  socket.on('disconnect', () => console.log('❌ Ayrıldı:', socket.id));
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🚀 OsFight sunucusu ${PORT} portunda çalışıyor.`);
 });
