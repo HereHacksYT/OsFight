@@ -2,13 +2,11 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OsFight Online</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>OsFight - Giriş</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- GİRİŞ EKRANI -->
     <div id="girisEkrani">
         <div class="giris-kutusu">
             <h1>⚔️ OsFight Online ⚔️</h1>
@@ -19,52 +17,20 @@
         </div>
     </div>
 
-    <!-- OYUN EKRANI -->
-    <div id="oyunEkrani" style="display: none;">
-        <!-- Üst bar -->
-        <div id="ustBar">
-            <span id="oyuncuAdi"></span>
-            <span id="onlineSayisi">Online: 0</span>
-        </div>
-
-        <!-- Sağ üst uyarı -->
-        <div id="sagUstUyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</div>
-
-        <!-- 3D canvas -->
-        <div id="canvasContainer"></div>
-
-        <!-- Alt orta butonlar -->
-        <div id="altButonlar">
-            <button onclick="karakterSec()">🎭 Karakter Seç</button>
-            <button onclick="basla()">🚀 Başla</button>
-        </div>
-
-        <!-- Sağ panel: arkadaş ve sohbet -->
-        <div id="sagPanel">
-            <div id="arkadasListesi">
-                <h3>👥 Arkadaşlar</h3>
-                <ul id="arkadasUl"></ul>
-                <button onclick="arkadasEkle()">➕ Arkadaş Ekle</button>
-            </div>
-            <div id="sohbetKutusu">
-                <h3>💬 Sohbet</h3>
-                <div id="mesajlar"></div>
-                <input type="text" id="mesajInput" placeholder="Mesaj yaz...">
-                <button onclick="mesajGonder()">Gönder</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Socket.io client -->
     <script src="/socket.io/socket.io.js"></script>
-    <!-- Three.js CDN -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-            }
+    <script>
+        const socket = io();
+
+        function girisYap() {
+            const username = document.getElementById('isimInput').value.trim();
+            if (!username) return alert('İsim girmelisin!');
+            localStorage.setItem('osfight_isim', username);
+            socket.emit('login', username);
         }
+
+        socket.on('login_success', (data) => {
+            window.location.href = 'game.html';
+        });
     </script>
-    <script type="module" src="script.js"></script>
 </body>
 </html>
