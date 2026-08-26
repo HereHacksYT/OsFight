@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <hmeta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,2 maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OsFight>
- Online</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>OsFight Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
-           <body>
+<body>
 
     <!-- DİKEY MOD UYARISI -->
     <div id="dikeyUyari">
-        <div class <="dikey-icerik">
-            <h2>📱 Cihazını Yatay Çevir</p>OsFight sadece yatay modda oynanabilir.</p>
+        <div class="dikey-icerik">
+            <h2>📱 Cihazını Yatay Çevir</h2>
+            <p>OsFight sadece yatay modda oynanabilir.</p>
         </div>
     </div>
 
@@ -27,6 +27,33 @@
         </div>
     </div>
 
+    <!-- LOBİ EKRANI -->
+    <div id="lobiEkrani" style="display: none;">
+        <!-- Sağ üst uyarı -->
+        <div id="sagUstUyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</div>
+
+        <!-- Karakter önizleme canvas'ı -->
+        <div id="lobiCanvasContainer"></div>
+
+        <!-- Lobi içerik -->
+        <div id="lobiIcerik">
+            <h2>Karakterini Seç</h2>
+            <div id="karakterSecim">
+                <div class="karakterKart" id="kupAdamKart" onclick="karakterSec('kup')">
+                    <div class="karakterOnizleme">⬛</div>
+                    <p>Küp Adam</p>
+                </div>
+                <div class="karakterKart" id="topAdamKart" onclick="karakterSec('top')">
+                    <div class="karakterOnizleme">⚪</div>
+                    <p>Top Adam</p>
+                </div>
+            </div>
+
+            <button id="arkadasEkleButon" onclick="arkadasSayfasi()">👥 Arkadaş Ekle</button>
+            <button id="lobiBaslatButon" onclick="oyunuBaslat()">🚀 BAŞLAT</button>
+        </div>
+    </div>
+
     <!-- OYUN EKRANI -->
     <div id="oyunEkrani" style="display: none;">
         <!-- Üst bar -->
@@ -36,26 +63,15 @@
             <span id="gucGosterge">⚡ Güç: 0</span>
         </div>
 
-        <!-- Sağ üst uyarı -->
-        <div id="sagUstUyari">💾Geçmişi Silersen Arkadaş ve İsmin Gider!💾</div>
-
         <!-- 3D canvas -->
         <div id="canvasContainer"></div>
 
-        <!-- BAŞLAT butonu -->
-        <button id="baslatButonu" onclick="oyunuBaslat()">🚀 BAŞLAT</button>
-
-        <!-- Alt orta butonlar -->
-        <div id="altButonlar" style="display: none;">
-            <button onclick="arkadasSayfasi()">👥 Arkadaşlar</button>
-        </div>
-
-        <!-- Joystick (sanal) -->
+        <!-- Joystick -->
         <div id="joystickAlani">
             <div id="joystickKol"></div>
         </div>
 
-        <!-- Saldırı butonu (mobil) -->
+        <!-- Saldırı butonu -->
         <button id="saldiriButonu">⚔️</button>
 
         <!-- Sağ panel (sohbet) -->
