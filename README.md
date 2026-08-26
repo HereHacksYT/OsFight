@@ -11,6 +11,4 @@ Made By OsmanBurda
 - Karakter seçimi (renk değiştirir)
 - Arkadaş ekleme ve yerel sohbet
 - Geçmişi temizleme
-
-## Deploy
-Render üzerinde **Static Site** olarak yayınlayabilirsiniz.
+- ## Online!!!
